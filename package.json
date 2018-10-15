@@ -1,0 +1,30 @@
+{
+  "name": "bookcafe-server",
+  "description": "BookCafe Server",
+  "dependencies": {
+    "@koa/cors": "^2.2.2",
+    "bcryptjs": "2.4.3",
+    "debug": "^3.1.0",
+    "fs-extra": "^7.0.0",
+    "jsonwebtoken": "^8.3.0",
+    "koa": "^2.5.2",
+    "koa-bodyparser": "^4.2.1",
+    "koa-passport": "^4.1.0",
+    "koa-router": "^7.4.0",
+    "koa-session": "^5.8.2",
+    "koa-static": "^5.0.0",
+    "lodash": "^4.17.10",
+    "mongoose": "^5.2.17",
+    "nodemon": "^1.18.3",
+    "passport": "0.4.0",
+    "passport-local": "^1.0.0",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "jest": "^23.6.0"
+  },
+  "scripts": {
+    "test": "jest",
+    "dev": "NODE_ENV=development nodemon ./"
+  }
+}
