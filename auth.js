@@ -1,36 +1,28 @@
-const passport = require('koa-passport')
-const PassportLocal = require('passport-local')
-const { User } = require('./models')
+const jwt = require("jsonwebtoken");
 
-const LocalStrategy = PassportLocal.Strategy
+module.exports = function auth(ctx, next) {
+  const token = getToken(ctx.headers);
 
-const fetchUser = ((username) => {
-  return User.findOne({
-    username: username
-  })
-})()
-
-passport.serializeUser(function (user, done) {
-  done(null, user.id)
-})
-
-passport.deserializeUser(async function (id, done) {
-  try {
-    const user = await fetchUser()
-    done(null, user)
-  } catch (err) {
-    done(err)
+  if (!token) {
+    ctx.throw(403, "Authorization required.");
   }
-})
 
-passport.use(new LocalStrategy(function (username, password, done) {
-  fetchUser(username)
-    .then(user => {
-      if (username === user.username && password === user.password) {
-        done(null, user)
-      } else {
-        done(null, false)
-      }
-    })
-    .catch(err => done(err))
-}))
+  jwt.verify(token, "secret", err => {
+    if (err) {
+      ctx.throw(403, "Authorization required.");
+    }
+
+    next();
+  });
+};
+
+function getToken(headers) {
+  if (
+    headers.Authorization &&
+    headers.Authorization.split(" ")[0] === "Bearer"
+  ) {
+    return headers.Authorization.split(" ")[1];
+  } else {
+    return null;
+  }
+}

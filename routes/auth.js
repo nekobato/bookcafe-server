@@ -1,18 +1,25 @@
-const Router = require('koa-router')
-const passport = require('passport')
+const Router = require("koa-router");
+const jwt = require("jsonwebtoken");
 
-const router = new Router()
+const router = new Router();
 
-router.post('/login',
-  passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/'
-  })
-)
+router.post("/login", ctx => {
+  const payload = {
+    username: ctx.query.username,
+    password: encrypt(ctx.query.password)
+  };
 
-router.post('/logout', (ctx) => {
-  ctx.logout()
-  ctx.redirect('/')
-})
+  user = await Users.findOne(payload)
 
-module.exports = router
+  if (!user) {
+    ctx.throw(400, 'User not found.')
+  }
+
+  const token = jwt.sign(user, "secret string", {
+    expiresIn: "2h"
+  });
+});
+
+router.post("/logout", ctx => {});
+
+module.exports = router;
