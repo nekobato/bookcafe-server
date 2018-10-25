@@ -29,18 +29,18 @@ module.exports = class Initializer {
     const srcDirents = await fs.readdir(path.join(this.baseDir, 'src'), { withFileTypes: true })
 
     Promise.all(srcDirents.map((dirent) => {
-      if (!dirent.isDirectory()) continue
+      if (!dirent.isDirectory()) return
       return BookModel.findOrCreate(dirName2BookInfo(dirent.name))
     }))
   }
 
   async convertBook(book) {
     const files = path.join(this.baseDir, book.uuid)
-    Promise.all(books.map((book) => {
-
+    Promise.all(books.map((async (book) => {
       await converter.convertThumbnail(imagePath)
       await converter.convertSmall(imagePath)
       await converter.convertBig(imagePath)
+      return
     }))
     process.nextTick()
   }

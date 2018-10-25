@@ -3,16 +3,16 @@ const jwt = require("jsonwebtoken");
 
 const router = new Router();
 
-router.post("/login", ctx => {
+router.post("/login", async ctx => {
   const payload = {
     username: ctx.query.username,
     password: encrypt(ctx.query.password)
   };
 
-  user = await Users.findOne(payload)
+  user = await Users.findOne(payload);
 
   if (!user) {
-    ctx.throw(400, 'User not found.')
+    ctx.throw(400, "User not found.");
   }
 
   const token = jwt.sign(user, "secret string", {

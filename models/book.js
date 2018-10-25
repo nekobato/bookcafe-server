@@ -1,5 +1,5 @@
-const { Schema } = require('mongoose')
-const util = require('./utils')
+const { Schema } = require("mongoose");
+const util = require("./utils");
 
 const BookSchema = new Schema({
   uuid: {
@@ -12,7 +12,7 @@ const BookSchema = new Schema({
   },
   author: {
     type: Schema.Types.ObjectId,
-    ref: 'Author'
+    ref: "Author"
   },
   created_at: {
     type: Date,
@@ -21,36 +21,39 @@ const BookSchema = new Schema({
   converted_at: {
     type: Date
   }
-})
+});
 
-BookSchema.static('findOneOrCreate', async (book) => {
-  const book = await this.findOne({
+BookSchema.static("findOneOrCreate", async book => {
+  const found = await this.findOne({
     title: book.title
-  })
+  });
 
-  if (book) {
-    return book
+  if (found) {
+    return found;
   }
 
   return this.create({
     uuid: util.createUuid(32),
     title: book.title,
     author: book.author
-  })
-})
+  });
+});
 
-BookSchema.static('updateConverted', async (book) => {
-  return this.findOneAndUpdate({
-    _id: book._id
-  }, {
+BookSchema.static("updateConverted", async book => {
+  return this.findOneAndUpdate(
+    {
+      _id: book._id
+    },
+    {
       converted_at: Date.now()
-    })
-})
+    }
+  );
+});
 
-BookSchema.static('findNotConverted', async () => {
+BookSchema.static("findNotConverted", async () => {
   return this.find({
     converted_at: null
-  })
-})
+  });
+});
 
-module.exports = BookSchema
+module.exports = BookSchema;
